@@ -1,0 +1,71 @@
+scalar DateTime
+
+schema {
+    query: Query
+    mutation: Mutations
+    subscription: Subscription
+}
+
+type Query {
+    getTasks(userId: ID!): [TaskType]!
+    getTask(userId: ID!, taskId: ID!): TaskType!
+}
+
+type Mutations {
+    createTask(userId: ID!, taskInput: TaskInput): Response
+    changeTaskStatus(taskId: ID!, newSatus: TaskStatusEnum): Response
+}
+
+type Subscription {
+    taskStatusChanged: TaskType!
+}
+
+type Response {
+    ok: Boolean
+    errors: [ErrorType]
+}
+
+input TaskInput {
+    createdAt: DateTime
+    title: String
+    status: TaskStatusEnum
+}
+
+type TaskType {
+    id: ID
+    createdAt: DateTime
+    title: String
+    status: TaskStatusEnum
+    userId: ID
+}
+
+type UserType {
+    id: ID
+    fullName: String
+    email: String
+}
+
+
+input UserInput {
+    fullName: String
+    email: String
+}
+
+enum ErrorTypeEnum {
+    SERVER_ERROR
+    NOT_FOUND_ERROR
+    VALIDATION_ERROR
+}
+
+type ErrorType {
+    message: String
+    code: ErrorTypeEnum!
+    text: String
+}
+
+enum TaskStatusEnum {
+    draft
+    in_process
+    delete
+    done
+}
